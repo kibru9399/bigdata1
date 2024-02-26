@@ -1,10 +1,18 @@
-#!/usr/bin/python
-# --*-- coding:utf-8 --*--
 import re
 import sys
 
-pat = re.compile('(?P<ip>\d+.\d+.\d+.\d+).*?\d{4}:(?P<hour>\d{2}):\d{2}.*? ')
+# Initialize a dictionary to hold the counts for each IP and hour
+counts = {}
+
+# Compile the regular expression pattern to extract IP, hour, and path
+pat = re.compile('(?P<ip>\d+\.\d+\.\d+\.\d+).*\[(?P<datetime>\d+/[a-zA-Z]+/\d+:(?P<hour>\d+):\d+:\d+).*?"\w+ (?P<subdir>.*?) ')
+
 for line in sys.stdin:
     match = pat.search(line)
     if match:
-        print '%s\t%s' % ('[' + match.group('hour') + ':00' + ']' + match.group('ip'), 1)
+        ip = match.group('ip')
+        hour = match.group('hour')
+        key = (ip, hour)
+        counts[key] = counts.get(key, 0) + 1
+for (ip, hour), count in counts.items():
+    print '%s\t%s'(ip + '#' + hour, count)

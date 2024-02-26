@@ -1,4 +1,4 @@
 import sys
 for line in sys.stdin:
-     hr, ips = line.split('\t')
-     print '%s\t%s' % (hr, ips)
+     hour, ip, count = line.split('\t') 
+     print('%s\t%s\t%s' % (hour, ip, count))

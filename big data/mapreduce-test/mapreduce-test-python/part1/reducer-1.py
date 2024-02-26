@@ -1,22 +1,17 @@
 #!/usr/bin/python
 from operator import itemgetter
 import sys
-
-dict_hr_ip = {}
-
+# After processing all lines, aggregate counts by hour and then select the top 3 IPs for each hour
+final_counts = {}
 for line in sys.stdin:
-    line = line.strip()
-    hr_ip, num = line.split('\t')
-    hr_ip = hr_ip.split(']')
-    hr, ip = hr_ip[0][1:], hr_ip[1]
-    try:
-        num = int(num)
-        dict_hr_ip[hr] = dict_hr_ip.get(hr, ',') + str(ip) + ','
+    ip_hr, count = line.split('\t')
+    ip, hour = ip_hr.split('#')
+    #for (ip, hour), count in counts.items():
+    if hour not in final_counts:
+        final_counts[hour] = []
+    final_counts[hour].append((ip + '#' + count))
 
-    except ValueError:
-        pass
+for hour, ips_counts in final_counts.items():
+    print('%s\t%s' % (hour, ips_counts))
 
 
-#sorted_dict_ip_count = sorted(dict_ip_count.items(), key=itemgetter(0))
-for hr, ip in dict_hr_ip:
-    print '%s\t%s' % (hr, ip)
